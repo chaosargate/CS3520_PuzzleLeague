@@ -27,7 +27,7 @@ int main()
 {
     srand(time(0));
 
-    RenderWindow app(VideoMode(640, 480), "Puzzle League!");
+    RenderWindow app(VideoMode(640, 464), "Puzzle League!");
     app.setFramerateLimit(60);
 
     Texture t1,t2;
@@ -98,13 +98,16 @@ int main()
    for (int i=1;i<=12;i++)
     for (int j=1;j<=6;j++)
      {
+        // encapsulate this stuff in while(match) loop.
        piece &p = grid[i][j];
        int dx,dy;
-       for(int n=0;n<4;n++)   // 4 - speed
+       for(int n=0;n<.001;n++)   // 4 - speed
        {dx = p.x-p.col*ts;
         dy = p.y-p.row*ts;
         if (dx) p.x-=dx/abs(dx);
 	    if (dy) p.y-=dy/abs(dy);}
+          // 4 - speed
+       p.row -= .1;
        if (dx||dy) isMoving=1;
      }
 
