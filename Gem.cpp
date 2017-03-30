@@ -1,18 +1,16 @@
 #include "Gem.h"
 using namespace puzzle_league;
 
-Gem::Gem(int x, int y, int row, int col, int kind, bool match, int alpha) {
-    x_ = x;
-    y_ = y;
-    row_ = row;
-    col_ = col;
-    kind_ = kind;
-    match_ = match;
-    alpha_ = alpha;
+Gem::Gem(int x, int y, int row, int col, int kind, bool match, int alpha) : x_ (x),
+    y_(y),
+    row_(row),
+    col_(col),
+    kind_(kind),
+    match_(match),
+    alpha_(alpha){
 }
 
 Gem::~Gem() {
-    cout << "Deleting gem!" << endl;
 }
 
 void Gem::setX(int x) noexcept {
@@ -69,11 +67,6 @@ void Gem::setAlpha(int alpha) noexcept {
     alpha_ = alpha;
 }
 
-void Gem::swap(Gem* gem, Grid* grid) noexcept
-{
-    //std::swap(getCol(), gem->getCol());
-    //std::swap(getRow(), gem->getRow());
-
-    grid->swap(getRow(), getCol(), this);
-    grid->swap(gem->getRow(), gem->getCol(), gem);
+int Gem::getAlpha() const noexcept {
+    return alpha_;
 }

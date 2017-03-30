@@ -5,13 +5,17 @@
 #include <stdlib.h>
 namespace puzzle_league {
 
-class Gem;
-
 class Grid {
 public:
     Grid();
 
-    void swap(int row, int col, Gem* g) noexcept;
+    Gem* getGem(int x, int y) const noexcept;
+
+    void swap(Gem **gem1, Gem **gem2) noexcept;
+
+    bool getIsMoving() const noexcept;
+
+    void setIsMoving(bool isMoving) noexcept;
 
     void findMatch() noexcept;
 
@@ -19,9 +23,11 @@ public:
 
     void moveGems() noexcept;
 
+    void deleteGems() noexcept;
+
 private:
     // i is rows, j is columns
-    Gem* grid_[12][6];
+    Gem* grid_[13][7];
     int ts_ = 32;
     bool isMoving_ = false;
 };

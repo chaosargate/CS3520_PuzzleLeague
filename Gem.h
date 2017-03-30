@@ -5,12 +5,10 @@
 #include <time.h>
 #include <vector>
 #include <iostream>
-#include "Grid.h"
 using namespace std;
 using namespace sf;
 
 namespace puzzle_league {
-class Grid;
 class Gem {
 public:
     Gem(int x, int y, int row, int col, int kind, bool match, int alpha);
@@ -43,7 +41,7 @@ public:
 
     void setAlpha(int alpha) noexcept;
 
-    void swap(Gem* gem, Grid* grid) noexcept;
+    int getAlpha() const noexcept;
 
 private:
     int x_;
