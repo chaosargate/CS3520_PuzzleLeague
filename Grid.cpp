@@ -55,28 +55,32 @@ void Grid::setIsMoving(bool isMoving) noexcept {
  * Scan the grid and find matches.
  */
 void Grid::findMatch() noexcept {
-    for (int i = 2; i < 12; i++) {
-        for (int j = 2; j < 6; j++) {
+    for (int i = 1; i < 13; i++) {
+        for (int j = 1; j < 7; j++) {
             if (grid_[i][j]) {
                 // Find vertical matches. Compare previous, current and next gem.
-                if (grid_[i][j]->getKind() == grid_[i + 1][j]->getKind()
-                        && grid_[i][j]->getAlpha() > 40
-                        && grid_[i + 1][j]->getAlpha() > 40) {
-                    if (grid_[i][j]->getKind() == grid_[i - 1][j]->getKind()
-                            && grid_[i - 1][j]->getAlpha() > 40) {
-                        for (int n = -1; n <= 1; n++) {
-                            grid_[i + n][j]->setMatch(true);
+                if (i > 1 && i < 12) {
+                    if (grid_[i][j]->getKind() == grid_[i + 1][j]->getKind()
+                            && grid_[i][j]->getAlpha() > 40
+                            && grid_[i + 1][j]->getAlpha() > 40) {
+                        if (grid_[i][j]->getKind() == grid_[i - 1][j]->getKind()
+                                && grid_[i - 1][j]->getAlpha() > 40) {
+                            for (int n = -1; n <= 1; n++) {
+                                grid_[i + n][j]->setMatch(true);
+                            }
                         }
                     }
                 }
                 // Find horizontal matches. Compare previous, current and next gem.
-                if (grid_[i][j]->getKind() == grid_[i][j + 1]->getKind()
-                        && grid_[i][j]->getAlpha() > 40
-                        && grid_[i][j + 1]->getAlpha() > 40) {
-                    if (grid_[i][j]->getKind() == grid_[i][j - 1]->getKind()
-                            && grid_[i][j - 1]->getAlpha() > 40) {
-                        for (int n = -1; n <= 1; n++) {
-                            grid_[i][j + n]->setMatch(true);
+                if (j > 1 && j < 6) {
+                    if (grid_[i][j]->getKind() == grid_[i][j + 1]->getKind()
+                            && grid_[i][j]->getAlpha() > 40
+                            && grid_[i][j + 1]->getAlpha() > 40) {
+                        if (grid_[i][j]->getKind() == grid_[i][j - 1]->getKind()
+                                && grid_[i][j - 1]->getAlpha() > 40) {
+                            for (int n = -1; n <= 1; n++) {
+                                grid_[i][j + n]->setMatch(true);
+                            }
                         }
                     }
                 }
