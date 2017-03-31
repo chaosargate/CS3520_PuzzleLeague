@@ -6,13 +6,13 @@ Grid::Grid() {
     for (int i = 12; i > 0; i--) {
         for (int j = 1; j < 7; j++) {
             cout << i << endl;
-            Gem *gem = new Gem(j * ts_, i * ts_, i, j, rand() % 5, false, 10);
+            Gem *gem = new Gem(j * ts_, i * ts_, i, j, rand() % 5, true, 40);
             grid_[i][j] = gem;
             if (i > 6) {
                 grid_[i][j]->setKind(rand() % 5);
                 grid_[i][j]->setCol(j);
                 grid_[i][j]->setRow(i);
-                //grid_[i][j]->setMatch(false);
+                grid_[i][j]->setMatch(false);
                 grid_[i][j]->setX(j * ts_);
                 grid_[i][j]->setY(i * ts_);
                 grid_[i][j]->setAlpha(255);
@@ -37,10 +37,11 @@ void Grid::swap(Gem **gem1, Gem **gem2) noexcept {
     (*gem1)->setRow(row2);
     (*gem2)->setRow(row1);
 
-    //(*gem)->setMatch(false);
+    //(*gem1)->setMatch(true);
 
+    Gem *temp = *gem2;
     grid_[(*gem1)->getRow()][(*gem1)->getCol()] = *gem1;
-    grid_[(*gem2)->getRow()][(*gem2)->getCol()] = *gem2;
+    grid_[temp->getRow()][temp->getCol()] = temp;
 }
 
 bool Grid::getIsMoving() const noexcept {
@@ -59,10 +60,10 @@ void Grid::findMatch() noexcept {
             if (grid_[i][j]) {
                 // Find vertical matches. Compare previous, current and next gem.
                 if (grid_[i][j]->getKind() == grid_[i + 1][j]->getKind()
-                        && grid_[i][j]->getAlpha() > 10
-                        && grid_[i + 1][j]->getAlpha() > 10) {
+                        && grid_[i][j]->getAlpha() > 40
+                        && grid_[i + 1][j]->getAlpha() > 40) {
                     if (grid_[i][j]->getKind() == grid_[i - 1][j]->getKind()
-                            && grid_[i - 1][j]->getAlpha() > 10) {
+                            && grid_[i - 1][j]->getAlpha() > 40) {
                         for (int n = -1; n <= 1; n++) {
                             grid_[i + n][j]->setMatch(true);
                         }
@@ -70,10 +71,10 @@ void Grid::findMatch() noexcept {
                 }
                 // Find horizontal matches. Compare previous, current and next gem.
                 if (grid_[i][j]->getKind() == grid_[i][j + 1]->getKind()
-                        && grid_[i][j]->getAlpha() > 10
-                        && grid_[i][j + 1]->getAlpha() > 10) {
+                        && grid_[i][j]->getAlpha() > 40
+                        && grid_[i][j + 1]->getAlpha() > 40) {
                     if (grid_[i][j]->getKind() == grid_[i][j - 1]->getKind()
-                            && grid_[i][j - 1]->getAlpha() > 10) {
+                            && grid_[i][j - 1]->getAlpha() > 40) {
                         for (int n = -1; n <= 1; n++) {
                             grid_[i][j + n]->setMatch(true);
                         }
@@ -127,8 +128,8 @@ void Grid::update() noexcept {
  * of their position accordingly.
  */
 void Grid::moveGems() noexcept {
-    for (int i = 1; i < 13; i++) {
-        for (int j = 1; j < 7; j++) {
+    for (int i = 0; i < 13; i++) {
+        for (int j = 0; j < 7; j++) {
             if (grid_[i][j]) {
                 Gem *gem = grid_[i][j];
                 int dx, dy;
@@ -160,12 +161,12 @@ void Grid::moveGems() noexcept {
  */
 void Grid::deleteGems() noexcept {
     if (!isMoving_) {
-        for (int i = 1; i < 13; i++) {
-            for (int j = 1; j < 7; j++) {
+        for (int i = 0; i < 13; i++) {
+            for (int j = 0; j < 7; j++) {
                 if (grid_[i][j]) {
                     if (grid_[i][j]->getMatch()) {
                         //cout << i << j << "is Match" << endl;
-                        if (grid_[i][j]->getAlpha() > 10) {
+                        if (grid_[i][j]->getAlpha() > 40) {
                             int alpha = grid_[i][j]->getAlpha();
                             grid_[i][j]->setAlpha(alpha - 10);
                             setIsMoving(true);
