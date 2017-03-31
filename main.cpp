@@ -81,8 +81,8 @@ int main() {
         //////draw///////
         app.draw(background);
 
-        for (int i = 0; i < 13; i++)
-            for (int j = 0; j < 7; j++) {
+        for (int i = 1; i < 13; i++)
+            for (int j = 1; j < 7; j++) {
                 Gem *p = grid.getGem(i, j);
                 if (p) {
                     gems.setTextureRect(IntRect(p->getKind() * 32, 0, 32, 32));

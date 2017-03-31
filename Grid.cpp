@@ -128,8 +128,8 @@ void Grid::update() noexcept {
  * of their position accordingly.
  */
 void Grid::moveGems() noexcept {
-    for (int i = 0; i < 13; i++) {
-        for (int j = 0; j < 7; j++) {
+    for (int i = 1; i < 13; i++) {
+        for (int j = 1; j < 7; j++) {
             if (grid_[i][j]) {
                 Gem *gem = grid_[i][j];
                 int dx, dy;
@@ -161,8 +161,8 @@ void Grid::moveGems() noexcept {
  */
 void Grid::deleteGems() noexcept {
     if (!isMoving_) {
-        for (int i = 0; i < 13; i++) {
-            for (int j = 0; j < 7; j++) {
+        for (int i = 1; i < 13; i++) {
+            for (int j = 1; j < 7; j++) {
                 if (grid_[i][j]) {
                     if (grid_[i][j]->getMatch()) {
                         //cout << i << j << "is Match" << endl;
