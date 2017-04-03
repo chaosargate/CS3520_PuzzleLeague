@@ -9,13 +9,13 @@ class Grid {
 public:
     Grid();
 
-    Gem* getGem(int x, int y) const noexcept;
+    Gem* getGem(const int& x, const int& y) const noexcept;
 
     void swap(Gem **gem1, Gem **gem2) noexcept;
 
     bool getIsMoving() const noexcept;
 
-    void setIsMoving(bool isMoving) noexcept;
+    void setIsMoving(const bool& isMoving) noexcept;
 
     void findMatch() noexcept;
 
@@ -23,13 +23,19 @@ public:
 
     void moveGems() noexcept;
 
+    void raiseGems() noexcept;
+
     void deleteGems() noexcept;
+
+    int getScore() const noexcept;
 
 private:
     // i is rows, j is columns
     Gem* grid_[13][7];
     int ts_ = 32;
     bool isMoving_ = false;
+    int speed_ = 0;
+    int score_ = 0;
 };
 }
 

@@ -1,84 +1,135 @@
 #include <SFML/Graphics.hpp>
 #include <time.h>
 #include <iostream>
+#include <chrono>
 #include "Grid.h"
 using namespace puzzle_league;
 using namespace sf;
 
 int ts = 32; //tile size
-Vector2i offset(224, 80);
+Vector2f offset(224, 80);
 
 Grid grid;
 
 int main() {
-    cout << "Created Grid" << endl;
     srand(time(0));
 
     RenderWindow app(VideoMode(640, 464), "Puzzle League!");
     app.setFramerateLimit(60);
 
-    Texture t1, t2;
+    Texture t1, t2, t3;
     t1.loadFromFile("images/background.png");
     t2.loadFromFile("images/gems.png");
+    t3.loadFromFile("images/cursor.png");
 
-    Sprite background(t1), gems(t2);
+    Sprite background(t1), gems(t2), cursor(t3);
+    cursor.setPosition(284, 430);
 
-    int x0, y0, x, y;
-    int click = 0;
-    Vector2i pos;
+    Text time;
+    Font font;
+    if (!font.loadFromFile("ScoreFont.ttf")) {
+    } else {
+        // set the font
+        time.setFont(font);
+
+        // set the string to display
+        time.setString("Time: ");
+
+        // set the character size
+        time.setCharacterSize(44); // in pixels, not points!
+
+        // set the color
+        time.setColor(sf::Color::Red);
+
+    }
+
+    int row, col;
+    Vector2f pos;
+    bool hasMoved = false;
 
     while (app.isOpen()) {
         Event e;
         while (app.pollEvent(e)) {
-            if (e.type == Event::Closed)
+            // update the position of the cursor
+            pos = cursor.getPosition() - offset;
+            if (e.type == Event::Closed) {
                 app.close();
+            }
 
-            if (e.type == Event::MouseButtonPressed)
-                if (e.key.code == Mouse::Left) {
-                    if (!grid.getIsMoving())
-                        click++;
-                    pos = Mouse::getPosition(app) - offset;
-                }
-        }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !hasMoved) {
 
-        // mouse click
-        if (click == 1) {
-            x0 = pos.x / ts + 1;
-            y0 = pos.y / ts + 1;
-        }
-        if (click == 2) {
-            x = pos.x / ts + 1;
-            y = pos.y / ts + 1;
-            if (abs(x - x0) + abs(y - y0) == 1) {
-                Gem *gem1 = grid.getGem(y0, x0);
-                Gem *gem2 = grid.getGem(y, x);
+                col = pos.x / ts + 2;
+                row = pos.y / ts + 2;
+                Gem *gem1 = grid.getGem(row, col);
+                Gem *gem2 = grid.getGem(row, col + 1);
                 grid.swap(&gem1, &gem2);
-                click = 0;
-            } else
-                click = 1;
+                hasMoved = true;
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)
+                    and !hasMoved) {
+                // Move cursor Left
+                col = pos.x / ts + 2;
+
+                if (col > 1) {
+                    cursor.move(ts * -1, 0);
+                    hasMoved = true;
+                }
+
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)
+                    and !hasMoved) {
+                // Move cursor Right
+                col = pos.x / ts + 2;
+
+                if (col < 5) {
+                    cursor.move(ts * 1, 0);
+                    hasMoved = true;
+                }
+
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
+                    and !hasMoved) {
+                // Move cursor Up
+                row = pos.y / ts + 2;
+
+                if (row > 1) {
+                    cursor.move(0, ts * -1);
+                    hasMoved = true;
+                }
+
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
+                    and !hasMoved) {
+                // Move cursor Down
+                row = pos.y / ts + 2;
+
+                if (row < 12) {
+                    cursor.move(0, ts * 1);
+                    hasMoved = true;
+                }
+            }
+
+            // When any key is released, allow movement again.
+            if (!(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)
+                    || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)
+                    || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
+                    || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
+                    || sf::Keyboard::isKeyPressed(sf::Keyboard::Space))) {
+                hasMoved = false;
+            }
         }
 
-        //cout << "Ready to find matches" << endl;
+        // Find matches between gems in the grid.
         grid.findMatch();
 
-        //cout << "Found Matches" << endl;
-
-        //Moving animation
+        // Move the gems.
         grid.setIsMoving(false);
         grid.moveGems();
 
-        //cout << "Moved Gems" << endl;
-
-        //Deleting amimation
+        // Fade the gems that are matches.
         grid.deleteGems();
 
-        //cout << "Deleted Gems" << endl;
-        //Update grid
+        // Update grid.
         grid.update();
 
-        //cout << "Updated Grid" << endl;
+        //grid.raiseGems();
 
-        //////draw///////
         app.draw(background);
 
         for (int i = 1; i < 13; i++)
@@ -92,6 +143,10 @@ int main() {
                     app.draw(gems);
                 }
             }
+
+        app.draw(cursor);
+        time += time
+        app.draw(time);
 
         app.display();
     }

@@ -9,37 +9,42 @@ using namespace std;
 using namespace sf;
 
 namespace puzzle_league {
+
 class Gem {
 public:
-    Gem(int x, int y, int row, int col, int kind, bool match, int alpha);
+
+    Gem();
+
+    Gem(const int& x, const int& y, const int& row, const int& col,
+            const int& kind, const bool& match, const int& alpha);
 
     ~Gem();
 
-    void setX(int x) noexcept;
+    void setX(const int& x) noexcept;
 
     int getX() const noexcept;
 
-    void setY(int y) noexcept;
+    void setY(const int& y) noexcept;
 
     int getY() const noexcept;
 
-    void setRow(int row) noexcept;
+    void setRow(const int& row) noexcept;
 
     int getRow() const noexcept;
 
-    void setCol(int col) noexcept;
+    void setCol(const int& col) noexcept;
 
     int getCol() const noexcept;
 
-    void setKind(int kind) noexcept;
+    void setKind(const int& kind) noexcept;
 
     int getKind() const noexcept;
 
-    void setMatch(bool match) noexcept;
+    void setMatch(const bool& match) noexcept;
 
     bool getMatch() const noexcept;
 
-    void setAlpha(int alpha) noexcept;
+    void setAlpha(const int& alpha) noexcept;
 
     int getAlpha() const noexcept;
 
