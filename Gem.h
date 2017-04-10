@@ -15,7 +15,7 @@ namespace puzzle_league {
  * coordinate indicating its sprite position and a row and column to indicate
  * its position on the grid which it belongs to. 3 or more gems can match
  * horizontally or vertically. When there is a match, the gems opacity is
- * gradually reduced to to 10, otherwise its initial value is 255.
+ * gradually reduced to 10, otherwise its initial value is 255.
  *
  *@author Fiona Hasanaj, Aaron Hoang
  */

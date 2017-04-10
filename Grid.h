@@ -6,7 +6,8 @@
 namespace puzzle_league {
 
 /**
- * A grid ...
+ * The main play area of the game. The grid itself is populated with Gems
+ * that can be swapped.
  *
  * @author Fiona Hasanaj, Aaron Hoang
  */
@@ -15,7 +16,7 @@ public:
     /** Grid constructor. **/
     Grid();
 
-    /** Descructor. **/
+    /** Destructor. **/
     ~Grid();
 
     /**
@@ -53,7 +54,8 @@ public:
     bool getIsMoving() const noexcept;
 
     /** Set whether the gems in the grid are moving. **/
-    void setIsMoving(const bool& isMoving) noexcept;
+    void setIsMoving(/** Are the gems in this grid moving? */
+                     const bool& isMoving) noexcept;
 
     /**
      * Scan the grid and find matches.
@@ -92,7 +94,7 @@ public:
 
     /**
      * Get the offset value, which represents the current number of pixels the
-     * gems have moved upwards vertically.
+     * gems have moved upwards relative to the last row they should be in.
      * @return current offset.
      */
     int getOffset() const noexcept;
@@ -100,7 +102,8 @@ public:
     /**
      * Update offset by the given value i.
      */
-    void updateOffset(int i) noexcept;
+    void updateOffset(/** The value to increment offset_ by */
+                      int i) noexcept;
 
     /**
      * Get the tile size of a gem in this grid.

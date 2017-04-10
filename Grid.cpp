@@ -15,9 +15,7 @@ Grid::Grid() {
     }
 }
 
-Grid::~Grid() {
-
-}
+Grid::~Grid() {}
 
 void Grid::initRow(const int& i) {
     try {
@@ -147,6 +145,9 @@ void Grid::moveGems() noexcept {
                 int dx, dy;
                 for (int n = 0; n < 4; n++) { // n is speed
                     dx = gem->getX() - gem->getCol() * ts_;
+
+                    // We'll increment the position of Y by offset_ to gradually move the gems
+                    // upwards so we can move the gems closer to the top.
                     dy = (gem->getY() - gem->getRow() * ts_) + offset_;
 
                     // If gem has changed its previous row, then set x position accordingly

@@ -9,24 +9,27 @@ using namespace puzzle_league;
 using namespace sf;
 
 /**
- * @namespace puzzle_league Implementation of Puzzle League game.
+ * @namespace puzzle_league
+ * Implementation of Puzzle League game.
  *
  * @author Fiona Hasanaj, Aaron Hoang
  */
-
-// Offset to center the sprites inside the outline of the background.
-Vector2f offset(224, 80);
-
-// Grid to be populated with gems.
-Grid grid;
 
 /**
  * Main program for running Puzzle League game.
  * @return The exit status.  Normal status is 0.
  */
 int main() {
+
+    // Offset to center the sprites inside the outline of the background.
+    Vector2f offset(224, 80);
+
+    // Grid to be populated with gems.
+    Grid grid;
+
     // Start time of the game.
     auto startTime = std::chrono::system_clock::now();
+
     // Allows to produce a different pseudo-random series each time the program is run.
     // Used for randomizing the gems in the grid.
     srand(time(0));
@@ -44,24 +47,43 @@ int main() {
 
     // Set initial position of the cursor.
     cursor.setPosition(284, 430);
+
     // Index of the row and column of the position of the cursor.
     int cursorRow, cursorCol;
+
     // Offset of the position of the cursor.
     Vector2f cursorPos;
 
     // If Left, Right, Up, Down, Space buttons are released.
     bool isReleased = true;
+
     // Offset value to increase the Y position of all gems by.
     int offsetAmount = 4;
+
+    // Indicate if time has passed so that we can gradually move the
+    // gems upwards.
     int lastTime;
 
+    // Has the game ended?
+    bool gameOver = false;
+
+    // Stores the time when the game ends.
+    string finalTime = "";
+
     while (app.isOpen()) {
+
+        // The event handler that listens to player input.
         Event e;
+
         while (app.pollEvent(e)) {
             // Update the position of the cursor.
             cursorPos = cursor.getPosition() - offset;
             if (e.type == Event::Closed) {
                 app.close();
+            }
+
+            if (gameOver) {
+                break;
             }
 
             // When space is pressed, swap the gems inside the cursor.
@@ -139,24 +161,26 @@ int main() {
         // Set the value of the elapsed time.
         string timeText = "TIME ";
         std::stringstream sstm;
+
         if (hours < 10) {
             sstm << "0" << hours;
         } else {
             sstm << hours;
         }
+
         if (minutes < 10) {
             sstm << ":0" << minutes;
         } else {
             sstm << ":" << minutes;
         }
-        if (seconds < 10) {
 
+        if (seconds < 10) {
             sstm << ":0" << seconds;
         } else {
             sstm << ":" << seconds;
         }
-        timeText += sstm.str();
 
+        timeText += sstm.str();
         // Clear stringstream
         sstm.str(std::string());
         sstm.clear();
@@ -167,19 +191,33 @@ int main() {
 
         // Text of the score.
         Text score;
+
         // Text of the elapsed time.
         Text time;
+
+        // Text and crude outline for Game Over text.
+        Text gO;
+        Text gOOutline;
+
         // Font style for score and elapsed time.
         Font font;
+
         if (!font.loadFromFile("ScoreFont.ttf")) {
-            // Throw error
+            throw domain_error("Font style does not exist");
         } else {
             // Set the font.
             time.setFont(font);
             score.setFont(font);
 
             // Set the string to display.
-            time.setString(timeText);
+            if (!gameOver) {
+                // Update time if the game is still running.
+                time.setString(timeText);
+            } else {
+                // Else, just display the final time.
+                time.setString(finalTime);
+            }
+
             score.setString(scoreText);
 
             // Set the character size.
@@ -187,30 +225,48 @@ int main() {
             score.setCharacterSize(45);
 
             // Set the color.
-            time.setColor(sf::Color::Red);
-            score.setColor(sf::Color::Blue);
+            time.setColor(sf::Color::Green);
+            score.setColor(sf::Color::Green);
 
             score.setPosition(450, 0);
         }
 
-        // Find matches between gems in the grid.
-        grid.findMatch();
+        if (!gameOver) {
+            // Find matches between gems in the grid.
+            grid.findMatch();
 
-        // Move the gems.
-        grid.setIsMoving(false);
-        grid.moveGems();
+            // Move the gems.
+            grid.setIsMoving(false);
+            grid.moveGems();
 
-        // Fade the gems that are matches.
-        grid.deleteGems();
+            // Fade the gems that are matches.
+            grid.deleteGems();
 
-        // Update grid.
-        grid.update();
+            // Update grid.
+            grid.update();
 
-        // If time has passed, update the offset value.
-        if (seconds != lastTime) {
-            grid.updateOffset(offsetAmount);
-            cursor.move(0, -1 * offsetAmount);
-            lastTime = seconds;
+            // If time has passed, update the offset value.
+            if (seconds != lastTime) {
+                grid.updateOffset(offsetAmount);
+                cursor.move(0, -1 * offsetAmount);
+                lastTime = seconds;
+            }
+
+        } else {
+
+            // Set the style for the Game Over text object
+            gO.setFont(font);
+            gOOutline.setFont(font);
+            gO.setString("Game\n\nOver");
+            gOOutline.setString("Game\n\nOver");
+            gO.setCharacterSize(60);
+            gOOutline.setCharacterSize(65);
+            gO.setColor(sf::Color::Red);
+            gOOutline.setColor(sf::Color::Black);
+            gO.setStyle(sf::Text::Bold);
+            gOOutline.setStyle(sf::Text::Bold);
+            gO.setPosition(275, 195);
+            gOOutline.setPosition(275, 192);
         }
 
         // Get the current offset of the grid.
@@ -220,12 +276,21 @@ int main() {
         for (int j = 1; j < 7; ++j) {
             if (grid.getGem(1, j)->getAlpha() == 255) {
                 if (gridOffset >= 16) {
-                    cout << "GAME OVER" << endl;
-                    break;
+                    gameOver = true;
+
+                    // Store the final time.
+                    if (finalTime == "") {
+                        finalTime = timeText;
+                    }
                 }
             }
         }
+        /*
+         while (gameOver) {
+         //cout << "GAME OVER" << endl;
 
+         }
+         */
         // Otherwise, update gems if the offset has reached 32 pixels.
         if (gridOffset >= grid.getTileSize()) {
             grid.raiseGems();
@@ -257,6 +322,9 @@ int main() {
 
         // Draw score.
         app.draw(score);
+
+        app.draw(gOOutline);
+        app.draw(gO);
 
         // Display the game.
         app.display();
