@@ -1,9 +1,6 @@
 #include "Gem.h"
 using namespace puzzle_league;
 
-Gem::Gem() {
-}
-
 Gem::Gem(const int& x, const int& y, const int& row, const int& col,
         const int& kind, const bool& match, const int& alpha) :
         x_(x), y_(y), row_(row), col_(col), kind_(kind), match_(match), alpha_(
