@@ -1,5 +1,5 @@
 # CS3520_PuzzleLeague
-A clone of the game 'Puzzle League' developed as the semester project for a C++ development course. Worked on by Aaron Hoang and Fiona Hasanaj.
+A clone of the game 'Puzzle League' developed as the semester project for a C++ development course. Worked on by Aaron Hoang and Fiona Hasanaj for the Spring 2017 semester.
 
 The project was developed using the SFML graphics library as opposed to the course-recommended SDL2 library as we felt the SFML library was easier to work with and it had keyboard event handling built in, which we quite liked.
 
